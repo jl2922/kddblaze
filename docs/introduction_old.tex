@@ -1,0 +1,47 @@
+
+It has been a decade since the MapReduce paradigm~\cite{dean2008mapreduce, dean2010mapreduce,dean2006experiences} was firstly introduced by Google for simplified data processing on large computing clusters.
+
+
+MapReduce and its improved variants~\cite{dean2008mapreduce, chambers2010flumejava, dean2010mapreduce, zaharia2010spark, zaharia2016apache,condie2010mapreduce,zaharia2008improving,goiri2015approxhadoop,afrati2010optimizing,li2015coded,ekanayake2010twister,he2008mars,bhatotia2011incoop} have significantly simplified parallel programs to make use of large computing clusters by
+\begin{itemize}
+    \item providing a high-level abstraction with powerful interface to users and
+    \item taking care of the low-level operations, such as distributing workloads and communicating between machines.
+\end{itemize}
+
+
+This paradigm has been used in almost all major tech companies serving billions of users around the world, which was proved to be not only successful in practice but also inspiring for further development of computing cluster technologies. 
+
+Although the computational efficiency of applications like processing crawled documents, web log requests tremendously benefit from the MapReduce paradigm, conventional MapReduce libraries cannot satisfy the increasing demanads of machine learning and data mining related tasks.
+Several MapReduce-oriented libraries~\cite{bosagh2016matrix, meng2016mllib, shanahan2015large} have been further investigated to improve the performance in handling machine learning and data mining.
+However, these libraries are developed solely based on one variant of MapReduce paradigm called Spark~\cite{zaharia2010spark, zaharia2016apache}, which has several severe limitations for machine learning and data mining applications. 
+
+As shown in Fig.\ref{fig:mr}, MapReduce is a data processing paradigm where we first map each element of the input data to one or more key-value pairs using a map function and then reduce all the pairs with the same key by an associative reduce function to get a single key-value pair for each unique key. With appropriate design considerations, MapReduce operations can be stacked together to describe most cloud applications, from the search engine that we use everyday to advanced analysis procedures in professional business intelligence solutions. 
+% MapReduce implementations, such as Hadoop and Spark, provide developers with well-encapsulated classes that are robust and scalable, so that developers can focus more on their applications. 
+% At the time of this writing, MapReduce and its variants are being used in all the major tech companies, .
+
+Although widely-used, most MapReduce implementations focus on their capability rather than the performance, which significantly reduces the performance in the applications of machine learning and data mining. 
+Hadoop MapReduce stores all the intermediate results to persistence storage devices, which enables the system to handle extremely large datasets but meets serious runtime overhead. 
+Spark provides in-memory MapReduce which can outperform Hadoop by one to two orders of magnitude; however, Spark imitates the original MapReduce pipeline that is specifically designed for spinning disks, which provides large room for performance optimization for applications that require intensive data processing and memory fitting.
+For in-memory MapReduce, the bottleneck shifts from the disks to the amount of computation and the network communication. 
+Our study tries to alleviate these new bottlenecks and build a highly-optimized MapReduce library from ground up.
+
+The most important motivation of building Blaze is that we meet severe performance limitations when apply traditional MapReduce framework to quantum chemistry computations, which requires to solve for the lowest few eigenvalues of a sparse Hamiltonian matrix of size $10^{29} \times 10^{29}$, where we repeatedly process trillions of non-zero matrix elements deterministically and $10^{32}$ other non-zero matrix elements stochastically~\cite{li2018fast}. 
+However, traditional MapReduce framework requires several months of computations for certain tasks, which is unendurable for real-world quantum chemistry applications.
+Later a scientific computation tool with hand-optimized MapReduce called Arrow is born to meet the high demanding quantum chemistry, which is at least $10 \times$ faster than original MapReduce framework.
+Although developed just a year ago, Arrow has already been running stably in several world-lead quantum chemistry research groups.
+
+Based on the deep understanding of the quantum computing process with MapReduce, we find that similar framework with a few additional performance optimization can be used to numerous data mining and machine learning related tasks as well. 
+Therefore, we factor out our MapReduce implementation, together with some other utility functions and distributed data containers into a standalone library called \texttt{\textbf{Blaze}}.
+
+The contributions of this study are listed as follows:
+
+\begin{itemize}
+
+    \item Fast serialization is implemented so that we could achieve higher performance on encoding/decoding and obtain smaller sizes for encoded messages. This tremendously reduces the inter-node communication cost.
+    \item Sort separation is introduced to remove the sort step from MapReduce as key orders are not important in many data mining applications. 
+    The sort is replaced with a non-blocking distributed hash table that is designed specifically for data mining in MapReduce, which reduces the total time complexity of MapReduce from O(nlogn) to O(n). 
+    For cases that key orders are important, native sort function or special parallel sorting libraries could be applied as well.
+    \item Efficient eager function is introduced to perform simultaneous map and reduce, which enables streaming data processing. This not only reduces the memory requirement of MapReduce so that we can use in-memory MapReduce on larger datasets, but also lowers the burden of inter-node communication cost.
+    \item We incorporate the improvements above as well as various small improvements and build Blaze, which is a blazing fast MapReduce library that can outperform Spark by 5x on common MapReduce tasks. 
+    Similar to Spark, it also supports reusing working datasets for multiple MapReduce operations.
+\end{itemize}

@@ -1,0 +1,40 @@
+
+\begin{abstract}
+
+MapReduce and its variants have significantly simplified and accelerated the process of developing parallel programs.
+However, most MapReduce implementations focus on data-intensive tasks while many real-world tasks are compute intensive and their data can fit distributedly into the memory.
+For these tasks, the speed of MapReduce programs can be much slower than those hand-optimized ones.
+We present Blaze, a C++ library that makes it easy to develop high performance parallel programs for such compute intensive tasks.
+At the core of Blaze is a highly-optimized in-memory MapReduce function, which has three main improvements over conventional MapReduce implementations:
+eager reduction, fast serialization, and special treatment for a small fixed key range.
+We also offer additional conveniences that make developing parallel programs similar to developing serial programs.
+These improvements make Blaze an easy-to-use cluster computing library that approaches the speed of hand-optimized parallel code.
+We apply Blaze to some common data mining tasks, including word frequency count, PageRank, k-means, expectation maximization (Gaussian mixture model), and k-nearest neighbors.
+Blaze outperforms Apache Spark by more than 10 times on average for these tasks, and the speed of Blaze scales almost linearly with the number of nodes.
+In addition, Blaze uses only the MapReduce function and 3 utility functions in its implementation while Spark uses almost 30 different parallel primitives in its official implementation.
+% MapReduce and its variants have significantly simplified and accelerated cluster computing.
+
+% keeping the high-level abstraction of MapReduce while achieving the speed of hand-optimized parallel code can be difficult.
+% To solve this problem, we develop Blaze,
+
+%Blaze is the foundation of Arrow, a new quantum chemistry package that is used in several top research groups and is even faster than other hand-optimized softwares on similar methods.
+% Blaze is originally designed for a quantum chemistry package to make the code more maintainable while preserving the performance of the hand-optimized implementation.
+% Blaze is the foundation of Arrow, a new quantum chemistry package that is already being used in several top research groups.
+% It is faster than other quantum chemistry packages, including hand-optimized ones.
+
+% are two sets of features: distributed data containers and the MapReduce function.
+% The MapReduce function provides a high performance implementation of performing MapReduce on an input container and saves the results to a mutable output container.
+% To enable the MapReduce function to run efficiently, Blaze introduces eager reduction and fast serialization.
+% Blaze also automatically applies special optimizations for cases where the resulting data container has a small fixed key range, which is common in data mining.
+
+
+
+% Over the past decade, MapReduce has revolutionized cloud data processing.
+% From our everyday Google searches to advanced business intelligence tools, many cloud services have been rewritten into or created with MapReduce operations to take advantage of the highly-scalable and well-encapsulated MapReduce infrastructures.
+% However, previous MapReduce implementations have not taken speed into account seriously.
+% This paper presents a design of a High Performance MapReduce-First in-memory cluster computing library called Blaze.
+% We redesign both the MapReduce algorithm and implementation from groud-up for in-memory use cases and introduce several performance-oriented improvements, including fast serialization, sort separation, and eager reduction.
+% We apply Blaze to several common data mining tasks, including word count, pagerank, k-means, expectation maximization, and nearest neighbors search.
+% Blaze scales out almost linearly on these tasks and outperforms in-memory Spark by up to 10 times while using 90\% less memory on average.
+
+\end{abstract}

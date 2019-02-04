@@ -1,0 +1,100 @@
+\appendix
+%Appendix A
+\section{Examples}
+In this section, we provide two examples to illustrate the usage of Blaze.
+All the source code of our implementation is included in our GitHub repository~\cite{blaze}.
+
+\subsection{Word frequency count}
+\label{app:wordcount}
+In this example, we count the number of occurrences of each unique word in an input file with Blaze MapReduce.
+We save the results in a distributed hash map, which can be used for further processing.
+
+To compile this example, you can clone our repository~\cite{blaze}, go to the \lstinline{example} folder and type \lstinline{make wordcount}.
+
+\begin{lstlisting}
+#include <blaze/blaze.h>
+#include <iostream>
+
+int main(int argc, char** argv) {
+  blaze::util::init(argc, argv);
+  
+  // Load file into distributed container.
+  auto lines =
+      blaze::util::load_file("filepath...");
+
+  // Define mapper function.
+  const auto& mapper = [&](
+      const size_t,  // Line id.
+      const std::string& line,
+      const auto& emit) {
+    // Split line into words.
+    std::stringstream ss(line);
+    std::string word;
+    while (getline(ss, word, ' ')) {
+      emit(word, 1);
+    }
+  };
+
+  // Define target hash map.
+  blaze::DistHashMap<std::string, size_t> words;
+
+  // Perform mapreduce.
+  blaze::mapreduce<
+      std::string, std::string, size_t>(
+          lines, mapper, "sum", words);
+    
+  // Output number of unique words.
+  std::cout << words.size() << std::endl;
+  
+  return 0;
+}
+\end{lstlisting}
+
+\subsection{Monte Carlo Pi Estimation}
+\label{app:pi}
+
+In this example, we present a MapReduce implementation of the Monte Carlo $\pi$ estimation.
+
+To compile this example, you can clone our repository~\cite{blaze}, go to the \lstinline{example} folder and type \lstinline{make pi}.
+
+\begin{lstlisting}
+#include <blaze/blaze.h>
+#include <iostream>
+
+int main(int argc, char** argv) {
+  blaze::util::init(argc, argv);
+  
+  const size_t N_SAMPLES = 1000000;
+
+  // Define source.
+  blaze::DistRange<size_t> samples(0, N_SAMPLES);
+
+  // Define mapper.
+  const auto& mapper = 
+      [&](const size_t, const auto& emit) {
+    // Random function in std is not thread safe.
+    double x = blaze::random::uniform();
+    double y = blaze::random::uniform();
+    // Map points within circle to key 0.
+    if (x * x + y * y < 1) emit(0, 1);
+  };
+
+  // Define target.
+  std::vector<size_t> count(1);  // {0}
+
+  // Perform MapReduce.
+  blaze::mapreduce<size_t, size_t>(
+      samples, mapper, "sum", count);
+
+  std::cout << 4.0 * count[0] / N_SAMPLES
+      << std::endl;
+  
+  return 0;
+}
+\end{lstlisting}
+
+
+In conventional MapReduce implementations, mapping big data onto a single key is usually slow and consumes a large amount of memory during the map phase.
+Hence, in practice, people usually hand-code parallel for loops in such situations.
+However, by using Blaze, the above code has similar memory consumption and performance as the hand-optimized parallel for loops.
+In short, Blaze frees users from dealing with low-level data communications while ensuring high performance.

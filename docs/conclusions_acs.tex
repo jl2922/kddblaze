@@ -1,0 +1,33 @@
+\section{Conclusion}
+\label{sec:con}
+Blaze provides a high performance implementation of MapReduce.
+Users can write parallel programs with Blaze's high-level MapReduce abstraction and achieve similar performance as the hand-optimized parallel code.
+
+% It is originally designed for compute intensive quantum simulations but we find it is also useful to many data mining tasks.
+We use Blaze to implement 5 common data mining algorithms.
+By writing only a few lines of serial code and apply the Blaze MapReduce function, we achieve over 10 times higher performance than Spark on these compute intensive tasks, even though we only use the MapReduce function and 3 utility functions in our Blaze implementation while Spark uses almost 30 different parallel primitives for different tasks in its official implementation.
+
+The high-level abstraction and the high performance makes Blaze an appealing choice for compute intensive tasks in data mining and related fields.
+
+% This paragraph will end the body of this sample document.
+% Remember that you might still have Acknowledgements or
+% Appendices; brief samples of these
+% follow.  There is still the Bibliography to deal with; and
+% we will make a disclaimer about that here: with the exception
+% of the reference to the \LaTeX\ book, the citations in
+% this paper are to articles which have nothing to
+% do with the present subject and are used as
+% examples only.
+%\end{document}  % This is where a 'short' article might terminate
+
+%ACKNOWLEDGEMENTS are optional
+\section{Acknowledgements}
+This work is supported by the U.S. National Science Foundation (NSF) grant ACI-1534965 and the Air Force Office of Scientific Research (AFOSR) grant FA9550-18-1-0095.
+We also thank professor Cyrus Umrigar for the helpful suggestions for the paper.
+
+% This section is optional; it is a location for you
+% to acknowledge grants, funding, editing assistance and
+% what have you.  In the present case, for example, the
+% authors would like to thank Gerald Murray of ACM for
+% his help in codifying this \textit{Author's Guide}
+% and the \textbf{.cls} and \textbf{.tex} files that it describes.
