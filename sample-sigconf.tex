@@ -1,5 +1,10 @@
 %%%% Proceedings format for most of ACM conferences (with the exceptions listed below) and all ICPS volumes.
 \documentclass[sigconf]{acmart}
+
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain}
+
 %%%% As of March 2017, [siggraph] is no longer used. Please use sigconf (above) for SIGGRAPH conferences.
 \usepackage{listings}
 \usepackage{courier}
@@ -32,9 +37,15 @@
 % These commands are for a PROCEEDINGS abstract or paper.
 \copyrightyear{2019}
 \acmYear{2019}
-\setcopyright{acmlicensed}
-\acmConference[KDD '19]{Woodstock '19: ACM Symposium on Neural Gaze Detection}{August 4--8, 2019}{Anchorage, Alaska}
-\acmBooktitle{KDD '19: ACM Symposium on Knowledge Discovery \& Data Mining, August 4--8, 2019, Anchorage, Alaska USA}
+\setcopyright{none}
+\acmConference[-]{-}{-}{-}
+% \acmBooktitle{KDD '19: ACM Symposium on Knowledge Discovery \& Data Mining, August 4--8, 2019, Anchorage, Alaska USA}
+
+% \copyrightyear{2019}
+% \acmYear{2019}
+% \setcopyright{acmlicensed}
+% \acmConference[KDD '19]{Woodstock '19: ACM Symposium on Neural Gaze Detection}{August 4--8, 2019}{Anchorage, Alaska}
+% \acmBooktitle{KDD '19: ACM Symposium on Knowledge Discovery \& Data Mining, August 4--8, 2019, Anchorage, Alaska USA}
 \acmPrice{15.00}
 % \acmDOI{10.1145/1122445.1122456}
 % \acmISBN{978-1-4503-9999-9/18/06}
